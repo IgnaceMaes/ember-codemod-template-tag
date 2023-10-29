@@ -5,26 +5,52 @@ import { createFiles, findFiles } from '@codemod-utils/files';
 
 import type { Options } from '../types/index.js';
 
-import { AST } from '@codemod-utils/ast-javascript';
+import { AST as AST_JS } from '@codemod-utils/ast-javascript';
+import { AST as AST_HBS } from '@codemod-utils/ast-template';
 
 function replaceExtension(filePath: string): string {
   return filePath.replace('.js', '.gjs');
 }
 
 function rewriteHbsTemplateString(file: string): string {
-  const traverse = AST.traverse();
+  const traverse = AST_JS.traverse();
+  let allComponentNames = new Set();
 
   const ast = traverse(file, {
     visitIdentifier(path) {
       if (path.node.name === 'hbs' && path.name === 'tag') {
         let code = path.parentPath.value.quasi.quasis[0].value.raw;
-        path.parentPath.parentPath.value[0] = AST.builders.jsxText('<template>' + code + '</template>');
+        allComponentNames = new Set([
+          ...allComponentNames,
+          ...extractComponentsFromTemplate(code),
+        ]);
+        path.parentPath.parentPath.value[0] = AST_JS.builders.jsxText(
+          '<template>' + code + '</template>',
+        );
       }
       return false;
-    }
+    },
   });
 
-  return AST.print(ast);
+  return AST_JS.print(ast);
+}
+
+function extractComponentsFromTemplate(template: string): string[] {
+  const components: string[] = [];
+  const traverse = AST_HBS.traverse();
+
+  traverse(template, {
+    /* Use AST.builders to transform the tree */
+    ElementNode(node) {
+      const componentName = node.tag;
+      // Assume it's a component invocation if it starts with a capital letter
+      if (componentName[0] === componentName[0]?.toUpperCase()) {
+        components.push(componentName);
+      }
+    },
+  });
+
+  return components;
 }
 
 export function addImports(options: Options): void {

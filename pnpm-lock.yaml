@@ -22,6 +22,9 @@ devDependencies:
   '@codemod-utils/ast-javascript':
     specifier: ^1.1.1
     version: 1.1.1
+  '@codemod-utils/ast-template':
+    specifier: ^1.1.0
+    version: 1.1.0
   '@codemod-utils/tests':
     specifier: ^1.1.1
     version: 1.1.1(@sondr3/minitest@0.1.2)
@@ -305,6 +308,15 @@ packages:
     dependencies:
       '@babel/parser': 7.23.0
       recast: 0.23.4
+    dev: true
+
+  /@codemod-utils/ast-template@1.1.0:
+    resolution: {integrity: sha512-6A/Gxmb9dlgLFiGAy9vlxqWB3owgMnXVt9O2aGue3EwCy6NUJlGITN7JGIX9cM4yU9Z8j7XSh6ZzWaKPiOWVCA==}
+    engines: {node: 18.* || >= 20}
+    dependencies:
+      ember-template-recast: 6.1.4
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /@codemod-utils/files@1.1.0:

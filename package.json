@@ -38,6 +38,7 @@
   "devDependencies": {
     "@babel/core": "^7.23.2",
     "@codemod-utils/ast-javascript": "^1.1.1",
+    "@codemod-utils/ast-template": "^1.1.0",
     "@codemod-utils/tests": "^1.1.1",
     "@sondr3/minitest": "^0.1.2",
     "@tsconfig/node18": "^18.2.2",
