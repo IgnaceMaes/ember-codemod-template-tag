@@ -8,13 +8,15 @@ import type { Options } from '../types/index.js';
 import { AST as AST_JS } from '@codemod-utils/ast-javascript';
 import { AST as AST_HBS } from '@codemod-utils/ast-template';
 
+import { kebabCase } from 'change-case';
+
 function replaceExtension(filePath: string): string {
   return filePath.replace('.js', '.gjs');
 }
 
 function rewriteHbsTemplateString(file: string): string {
   const traverse = AST_JS.traverse();
-  let allComponentNames = new Set();
+  let allComponentNames = new Set<string>();
 
   const ast = traverse(file, {
     visitIdentifier(path) {
@@ -31,6 +33,7 @@ function rewriteHbsTemplateString(file: string): string {
       return false;
     },
   });
+  addComponentImports(ast, allComponentNames);
 
   return AST_JS.print(ast);
 }
@@ -51,6 +54,21 @@ function extractComponentsFromTemplate(template: string): string[] {
   });
 
   return components;
+}
+
+function addComponentImports(ast: any, componentNames: Set<string>) {
+  [...componentNames].forEach((componentName) => {
+    const importSpecifier = AST_JS.builders.importDefaultSpecifier(AST_JS.builders.identifier(componentName));
+    const newImport = AST_JS.builders.importDeclaration(
+      [importSpecifier],
+      AST_JS.builders.stringLiteral(convertComponentNameToPath('discourse/components/', componentName)),
+    );
+    ast.program.body.unshift(newImport);
+  });
+}
+
+function convertComponentNameToPath(componentRoot: string, componentName: string): string {
+  return componentRoot + kebabCase(componentName).replace(/::/g, '/');
 }
 
 export function addImports(options: Options): void {
