@@ -20,9 +20,9 @@ function rewriteHbsTemplateString(file: string, componentRoot: string): string {
   let allHelperNames = new Set<string>();
 
   const ast = traverse(file, {
-    visitIdentifier(path) {
-      if (path.node.name === 'hbs' && path.name === 'tag') {
-        let templateCode = path.parentPath.value.quasi.quasis[0].value.raw;
+    visitTaggedTemplateExpression(path) {
+      if (path.value.tag.name === 'hbs') {
+        let templateCode = path.value.quasi.quasis[0].value.raw;
         allComponentNames = new Set([
           ...allComponentNames,
           ...extractComponentsFromTemplate(templateCode),
@@ -32,8 +32,8 @@ function rewriteHbsTemplateString(file: string, componentRoot: string): string {
           ...extractHelpersFromTemplate(templateCode),
         ]);
         templateCode = convertToComponentImports(templateCode);
-        path.parentPath.parentPath.value[0] = AST_JS.builders.jsxText(
-          '<template>' + templateCode + '</template>',
+        path.replace(
+          AST_JS.builders.jsxText('<template>' + templateCode + '</template>'),
         );
       }
       return false;
@@ -44,7 +44,7 @@ function rewriteHbsTemplateString(file: string, componentRoot: string): string {
         path.replace();
       }
       return false;
-    }
+    },
   });
   addComponentImports(ast, allComponentNames, componentRoot);
   addHelperImports(ast, allHelperNames);
@@ -80,7 +80,7 @@ function extractHelpersFromTemplate(template: string): string[] {
     MustacheStatement(node) {
       const helperName = (node.path as any)?.original;
       helpers.push(helperName);
-    }
+    },
   });
 
   return helpers;
@@ -95,7 +95,7 @@ function convertToComponentImports(template: string): string {
       const componentName = node.tag;
       // Assume it's a component invocation if it starts with a capital letter
       if (componentName[0] === componentName[0]?.toUpperCase()) {
-        node.tag = getComponentNameFromNestedPath(componentName)
+        node.tag = getComponentNameFromNestedPath(componentName);
       }
     },
   });
@@ -103,22 +103,36 @@ function convertToComponentImports(template: string): string {
   return AST_HBS.print(ast);
 }
 
-function addComponentImports(ast: any, componentNames: Set<string>, componentRoot: string) {
+function addComponentImports(
+  ast: any,
+  componentNames: Set<string>,
+  componentRoot: string,
+) {
   [...componentNames].forEach((componentName) => {
     const actualComponentName = getComponentNameFromNestedPath(componentName);
-    const importSpecifier = AST_JS.builders.importDefaultSpecifier(AST_JS.builders.identifier(actualComponentName));
+    const importSpecifier = AST_JS.builders.importDefaultSpecifier(
+      AST_JS.builders.identifier(actualComponentName),
+    );
     const newImport = AST_JS.builders.importDeclaration(
       [importSpecifier],
-      AST_JS.builders.stringLiteral(convertComponentNameToPath(componentRoot, componentName)),
+      AST_JS.builders.stringLiteral(
+        convertComponentNameToPath(componentRoot, componentName),
+      ),
     );
     ast.program.body.unshift(newImport);
   });
 }
 
 function addHelperImports(ast: any, helperNames: Set<string>) {
-  const builtinHelpers = [...helperNames].filter((helper) => BUILT_IN_HELPERS.includes(helper));
+  const builtinHelpers = [...helperNames].filter((helper) =>
+    BUILT_IN_HELPERS.includes(helper),
+  );
   if (builtinHelpers.length) {
-    const importSpecifiers = builtinHelpers.map((builtinHelper) => AST_JS.builders.importSpecifier(AST_JS.builders.identifier(builtinHelper)));
+    const importSpecifiers = builtinHelpers.map((builtinHelper) =>
+      AST_JS.builders.importSpecifier(
+        AST_JS.builders.identifier(builtinHelper),
+      ),
+    );
     const newImport = AST_JS.builders.importDeclaration(
       importSpecifiers,
       AST_JS.builders.stringLiteral('@ember/helper'),
@@ -127,8 +141,18 @@ function addHelperImports(ast: any, helperNames: Set<string>) {
   }
 }
 
-function convertComponentNameToPath(componentRoot: string, componentName: string): string {
-  return componentRoot + [...componentName.split('::').map((componentPart) => kebabCase(componentPart))].join('/');
+function convertComponentNameToPath(
+  componentRoot: string,
+  componentName: string,
+): string {
+  return (
+    componentRoot +
+    [
+      ...componentName
+        .split('::')
+        .map((componentPart) => kebabCase(componentPart)),
+    ].join('/')
+  );
 }
 
 function getComponentNameFromNestedPath(componentPath: string): string {
