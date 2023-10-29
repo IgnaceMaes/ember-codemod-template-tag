@@ -94,7 +94,7 @@ function getComponentNameFromNestedPath(componentPath: string): string {
   return componentPath.split('::').pop() ?? '';
 }
 
-export function addImports(options: Options): void {
+export function convertTests(options: Options): void {
   const { projectRoot } = options;
 
   const filePaths = findFiles('**/*-test.js', {

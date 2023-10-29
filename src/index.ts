@@ -1,4 +1,4 @@
-import { addEndOfLine, addImports, createOptions } from './steps/index.js';
+import { addEndOfLine, convertTests, createOptions } from './steps/index.js';
 import type { CodemodOptions } from './types/index.js';
 
 export function runCodemod(codemodOptions: CodemodOptions): void {
@@ -6,5 +6,5 @@ export function runCodemod(codemodOptions: CodemodOptions): void {
 
   // TODO: Replace with actual steps
   addEndOfLine(options);
-  addImports(options);
+  convertTests(options);
 }
