@@ -12,6 +12,7 @@ Codemod to convert Glimmer components to the `<template>` tag authoring format i
 ### Features
 
 - Rewrites the `hbs` template helper to the `<template>` tag
+- Adds imports for components and removes `hbs` import
 - Supports nested component paths (e.g. `Cards::CardHeader` will be used as `CardHeader`)
 - Adds imports for built-in helpers (`concat`, `array`, `fn`, `get`, `hash`)
 
