@@ -1,23 +1,23 @@
 import { assertFixture, loadFixture, test } from '@codemod-utils/tests';
 
-import { addEndOfLine } from '../../../src/steps/index.js';
+import { convertTests } from '../../../src/steps/index.js';
 import {
   codemodOptions,
   options,
 } from '../../helpers/shared-test-setups/sample-project.js';
 
-test('steps | add-end-of-line > edge case (file is empty)', function () {
+test('steps | convert-tests > base case', function () {
   const inputProject = {
-    'file.txt': '',
+    'file.txt': 'Hello world!\n',
   };
 
   const outputProject = {
-    'file.txt': '\n',
+    'file.txt': 'Hello world!\n',
   };
 
   loadFixture(inputProject, codemodOptions);
 
-  addEndOfLine(options);
+  convertTests(options);
 
   assertFixture(outputProject, codemodOptions);
 });
