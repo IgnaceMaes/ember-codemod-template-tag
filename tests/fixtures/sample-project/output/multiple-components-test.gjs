@@ -1,7 +1,6 @@
 import Bar from 'example-app/components/bar';
 import Foo from 'example-app/components/foo';
 import { render } from '@ember/test-helpers';
-import { hbs } from 'ember-cli-htmlbars';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'example-app/tests/helpers/component-test';
 

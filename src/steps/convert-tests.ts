@@ -38,6 +38,13 @@ function rewriteHbsTemplateString(file: string): string {
       }
       return false;
     },
+    visitImportDeclaration(path) {
+      // Remove the `hbs` helper import
+      if (path.value.source.value === 'ember-cli-htmlbars') {
+        path.replace();
+      }
+      return false;
+    }
   });
   addComponentImports(ast, allComponentNames);
   addHelperImports(ast, allHelperNames);
