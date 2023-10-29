@@ -26,6 +26,7 @@ function rewriteHbsTemplateString(file: string): string {
           ...allComponentNames,
           ...extractComponentsFromTemplate(code),
         ]);
+        code = convertToComponentImports(code);
         path.parentPath.parentPath.value[0] = AST_JS.builders.jsxText(
           '<template>' + code + '</template>',
         );
@@ -56,9 +57,27 @@ function extractComponentsFromTemplate(template: string): string[] {
   return components;
 }
 
+function convertToComponentImports(template: string): string {
+  const traverse = AST_HBS.traverse();
+
+  const ast = traverse(template, {
+    /* Use AST.builders to transform the tree */
+    ElementNode(node) {
+      const componentName = node.tag;
+      // Assume it's a component invocation if it starts with a capital letter
+      if (componentName[0] === componentName[0]?.toUpperCase()) {
+        node.tag = getComponentNameFromNestedPath(componentName)
+      }
+    },
+  });
+
+  return AST_HBS.print(ast);
+}
+
 function addComponentImports(ast: any, componentNames: Set<string>) {
   [...componentNames].forEach((componentName) => {
-    const importSpecifier = AST_JS.builders.importDefaultSpecifier(AST_JS.builders.identifier(componentName));
+    const actualComponentName = getComponentNameFromNestedPath(componentName);
+    const importSpecifier = AST_JS.builders.importDefaultSpecifier(AST_JS.builders.identifier(actualComponentName));
     const newImport = AST_JS.builders.importDeclaration(
       [importSpecifier],
       AST_JS.builders.stringLiteral(convertComponentNameToPath('discourse/components/', componentName)),
@@ -68,7 +87,11 @@ function addComponentImports(ast: any, componentNames: Set<string>) {
 }
 
 function convertComponentNameToPath(componentRoot: string, componentName: string): string {
-  return componentRoot + kebabCase(componentName).replace(/::/g, '/');
+  return componentRoot + [...componentName.split('::').map((componentPart) => kebabCase(componentPart))].join('/');
+}
+
+function getComponentNameFromNestedPath(componentPath: string): string {
+  return componentPath.split('::').pop() ?? '';
 }
 
 export function addImports(options: Options): void {
