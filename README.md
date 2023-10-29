@@ -5,7 +5,54 @@
 Codemod to convert Glimmer components to the `<template>` tag authoring format in `.gjs` and `.gts`.
 
 > **WARNING**
-> This codemod is far from feature complete. Currently it only handles converting `-test.js` files which use the `hbs` helper, with taking a lot of assumptions.
+> This codemod is far from feature complete. Currently it only handles converting `*-test.js` files which use the `hbs` helper.
+
+## Functionality
+
+### Features
+
+- Rewrites the `hbs` template helper to the `<template>` tag
+- Supports nested component paths (e.g. `Cards::CardHeader` will be used as `CardHeader`)
+- Adds imports for built-in helpers (`concat`, `array`, `fn`, `get`, `hash`)
+
+### Example
+
+Given a file `foo-test.js`:
+
+```js
+import { render } from '@ember/test-helpers';
+import { hbs } from 'ember-cli-htmlbars';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'example-app/tests/helpers/component-test';
+
+module('Integration | Component | foo', function (hooks) {
+  setupRenderingTest(hooks);
+
+  test('bar', async function (assert) {
+    await render(hbs`<Foo @x={{array 1 2 3}} />`);
+  });
+});
+```
+
+The codemod will rewrite this to:
+
+```js
+import { array } from '@ember/helper';
+import Foo from 'example-app/components/foo';
+import { render } from '@ember/test-helpers';
+import { hbs } from 'ember-cli-htmlbars';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'example-app/tests/helpers/component-test';
+
+module('Integration | Component | foo', function (hooks) {
+  setupRenderingTest(hooks);
+
+  test('bar', async function (assert) {
+    await render(<template><Foo @x={{array 1 2 3}}/></template>);
+  });
+});
+
+```
 
 
 ## Usage
