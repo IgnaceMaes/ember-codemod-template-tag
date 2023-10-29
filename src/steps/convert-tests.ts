@@ -17,24 +17,30 @@ function replaceExtension(filePath: string): string {
 function rewriteHbsTemplateString(file: string): string {
   const traverse = AST_JS.traverse();
   let allComponentNames = new Set<string>();
+  let allHelperNames = new Set<string>();
 
   const ast = traverse(file, {
     visitIdentifier(path) {
       if (path.node.name === 'hbs' && path.name === 'tag') {
-        let code = path.parentPath.value.quasi.quasis[0].value.raw;
+        let templateCode = path.parentPath.value.quasi.quasis[0].value.raw;
         allComponentNames = new Set([
           ...allComponentNames,
-          ...extractComponentsFromTemplate(code),
+          ...extractComponentsFromTemplate(templateCode),
         ]);
-        code = convertToComponentImports(code);
+        allHelperNames = new Set([
+          ...allHelperNames,
+          ...extractHelpersFromTemplate(templateCode),
+        ]);
+        templateCode = convertToComponentImports(templateCode);
         path.parentPath.parentPath.value[0] = AST_JS.builders.jsxText(
-          '<template>' + code + '</template>',
+          '<template>' + templateCode + '</template>',
         );
       }
       return false;
     },
   });
   addComponentImports(ast, allComponentNames);
+  addHelperImports(ast, allHelperNames);
 
   return AST_JS.print(ast);
 }
@@ -55,6 +61,22 @@ function extractComponentsFromTemplate(template: string): string[] {
   });
 
   return components;
+}
+
+const BUILT_IN_HELPERS = ['concat', 'array', 'fn', 'get', 'hash'];
+
+function extractHelpersFromTemplate(template: string): string[] {
+  const helpers: string[] = [];
+  const traverse = AST_HBS.traverse();
+
+  traverse(template, {
+    MustacheStatement(node) {
+      const helperName = (node.path as any)?.original;
+      helpers.push(helperName);
+    }
+  });
+
+  return helpers;
 }
 
 function convertToComponentImports(template: string): string {
@@ -84,6 +106,18 @@ function addComponentImports(ast: any, componentNames: Set<string>) {
     );
     ast.program.body.unshift(newImport);
   });
+}
+
+function addHelperImports(ast: any, helperNames: Set<string>) {
+  const builtinHelpers = [...helperNames].filter((helper) => BUILT_IN_HELPERS.includes(helper));
+  if (builtinHelpers.length) {
+    const importSpecifiers = builtinHelpers.map((builtinHelper) => AST_JS.builders.importSpecifier(AST_JS.builders.identifier(builtinHelper)));
+    const newImport = AST_JS.builders.importDeclaration(
+      importSpecifiers,
+      AST_JS.builders.stringLiteral('@ember/helper'),
+    );
+    ast.program.body.unshift(newImport);
+  }
 }
 
 function convertComponentNameToPath(componentRoot: string, componentName: string): string {
