@@ -32,7 +32,8 @@
     "lint:js:fix": "eslint . --fix",
     "lint:types": "tsc --noEmit",
     "prepare": "pnpm build",
-    "test": "./build.sh --test && mt dist-for-testing --quiet"
+    "test": "./build.sh --test && mt dist-for-testing --quiet",
+    "release": "pnpm build && changeset publish"
   },
   "dependencies": {
     "@codemod-utils/files": "^1.1.0",
