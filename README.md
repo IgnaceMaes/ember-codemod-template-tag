@@ -2,14 +2,21 @@
 
 # ember-codemod-template-tag
 
-_Codemod to [PROVIDE A SHORT DESCRIPTION.]_
+Codemod to convert Glimmer components to the `<template>` tag authoring format in `.gjs` and `.gts`.
+
+> *WARNING*
+> This codemod is far from feature complete. Currently it only handles converting `-test.js` files which use the `hbs` helper, with taking a lot of assumptions.
 
 
 ## Usage
 
 ### Arguments
 
-[PROVIDE REQUIRED AND OPTIONAL ARGUMENTS.]
+You must pass the component root directory. In most cases this will be `your-app-name/components`:
+
+```sh
+npx ember-codemod-template-tag --component-root <your-app-name/components>
+```
 
 <details>
 
