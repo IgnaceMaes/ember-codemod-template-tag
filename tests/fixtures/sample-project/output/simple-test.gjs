@@ -8,7 +8,7 @@ module('Integration | Component | ace-editor', function (hooks) {
   setupRenderingTest(hooks);
 
   test('css editor', async function (assert) {
-    await render(hbs`<AceEditor @mode="css" />`);
+    await render(<template><AceEditor @mode="css" /></template>);
     assert.ok(exists('.ace_editor'), 'it renders the ace editor');
   });
 });
