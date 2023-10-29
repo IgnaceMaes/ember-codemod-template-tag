@@ -1,6 +1,6 @@
 {
   "name": "ember-codemod-template-tag",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": false,
   "description": "Codemod to convert Glimmer components to the <template> tag authoring format in .gjs and .gts",
   "keywords": [
