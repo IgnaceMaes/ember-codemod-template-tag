@@ -14,7 +14,7 @@ function replaceExtension(filePath: string): string {
   return filePath.replace('.js', '.gjs');
 }
 
-function rewriteHbsTemplateString(file: string): string {
+function rewriteHbsTemplateString(file: string, componentRoot: string): string {
   const traverse = AST_JS.traverse();
   let allComponentNames = new Set<string>();
   let allHelperNames = new Set<string>();
@@ -46,7 +46,7 @@ function rewriteHbsTemplateString(file: string): string {
       return false;
     }
   });
-  addComponentImports(ast, allComponentNames);
+  addComponentImports(ast, allComponentNames, componentRoot);
   addHelperImports(ast, allHelperNames);
 
   return AST_JS.print(ast);
@@ -103,13 +103,13 @@ function convertToComponentImports(template: string): string {
   return AST_HBS.print(ast);
 }
 
-function addComponentImports(ast: any, componentNames: Set<string>) {
+function addComponentImports(ast: any, componentNames: Set<string>, componentRoot: string) {
   [...componentNames].forEach((componentName) => {
     const actualComponentName = getComponentNameFromNestedPath(componentName);
     const importSpecifier = AST_JS.builders.importDefaultSpecifier(AST_JS.builders.identifier(actualComponentName));
     const newImport = AST_JS.builders.importDeclaration(
       [importSpecifier],
-      AST_JS.builders.stringLiteral(convertComponentNameToPath('example-app/components/', componentName)),
+      AST_JS.builders.stringLiteral(convertComponentNameToPath(componentRoot, componentName)),
     );
     ast.program.body.unshift(newImport);
   });
@@ -136,7 +136,7 @@ function getComponentNameFromNestedPath(componentPath: string): string {
 }
 
 export function convertTests(options: Options): void {
-  const { projectRoot } = options;
+  const { componentRoot, projectRoot } = options;
 
   const filePaths = findFiles('**/*-test.js', {
     projectRoot,
@@ -151,7 +151,7 @@ export function convertTests(options: Options): void {
       renameSync(join(projectRoot, filePath), join(projectRoot, newFilePath));
 
       // Replace hbs`` template string with a <template> tag
-      file = rewriteHbsTemplateString(file);
+      file = rewriteHbsTemplateString(file, componentRoot);
 
       return [newFilePath, file];
     }),

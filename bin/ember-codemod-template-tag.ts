@@ -13,13 +13,20 @@ process.title = 'ember-codemod-template-tag';
 
 // Set codemod options
 const argv = yargs(hideBin(process.argv))
+  .option('component-root', {
+    describe: 'The path to your components folder (usually app-name/components)',
+    type: 'string',
+  })
   .option('root', {
     describe: 'Where to run the codemod',
     type: 'string',
   })
   .parseSync();
 
+const ensureEndsWithSlash = (path: string): string => path.endsWith('/') ? path : `${path}/`;
+
 const codemodOptions: CodemodOptions = {
+  componentRoot: ensureEndsWithSlash(argv['component-root'] ?? 'example-app/components'),
   projectRoot: argv['root'] ?? process.cwd(),
 };
 
