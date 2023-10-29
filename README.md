@@ -1,4 +1,4 @@
-[![This project uses GitHub Actions for continuous integration.](https://github.com/<your-github-handle>/<your-repo-name>/actions/workflows/ci.yml/badge.svg)](https://github.com/<your-github-handle>/<your-repo-name>/actions/workflows/ci.yml)
+[![This project uses GitHub Actions for continuous integration.](https://github.com/IgnaceMaes/ember-codemod-template-tag/actions/workflows/ci.yml/badge.svg)](https://github.com/IgnaceMaes/ember-codemod-template-tag/actions/workflows/ci.yml)
 
 # ember-codemod-template-tag
 
