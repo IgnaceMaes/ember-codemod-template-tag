@@ -4,7 +4,7 @@
 
 Codemod to convert Glimmer components to the `<template>` tag authoring format in `.gjs` and `.gts`.
 
-> *WARNING*
+> **WARNING**
 > This codemod is far from feature complete. Currently it only handles converting `-test.js` files which use the `hbs` helper, with taking a lot of assumptions.
 
 
