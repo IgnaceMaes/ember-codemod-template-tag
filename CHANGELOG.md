@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.1
+
+### Patch Changes
+
+- [`198321e`](https://github.com/IgnaceMaes/ember-codemod-template-tag/commit/198321ec59a162bec96f30de46a25e83f6c9fd78) Thanks [@IgnaceMaes](https://github.com/IgnaceMaes)! - Fix dependencies
+
 ## 0.1.0
 
 ### Minor Changes
