@@ -1,9 +1,9 @@
-import Button from 'discourse/components/ui/button';
+import Button from 'example-app/components/ui/button';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { module, test } from 'qunit';
-import { setupRenderingTest } from 'discourse/tests/helpers/component-test';
-import { exists } from 'discourse/tests/helpers/qunit-helpers';
+import { setupRenderingTest } from 'example-app/tests/helpers/component-test';
+import { exists } from 'example-app/tests/helpers/qunit-helpers';
 
 module('Integration | Component | ui/button', function (hooks) {
   setupRenderingTest(hooks);

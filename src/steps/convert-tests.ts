@@ -80,7 +80,7 @@ function addComponentImports(ast: any, componentNames: Set<string>) {
     const importSpecifier = AST_JS.builders.importDefaultSpecifier(AST_JS.builders.identifier(actualComponentName));
     const newImport = AST_JS.builders.importDeclaration(
       [importSpecifier],
-      AST_JS.builders.stringLiteral(convertComponentNameToPath('discourse/components/', componentName)),
+      AST_JS.builders.stringLiteral(convertComponentNameToPath('example-app/components/', componentName)),
     );
     ast.program.body.unshift(newImport);
   });

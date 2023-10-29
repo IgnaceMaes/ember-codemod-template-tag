@@ -1,18 +1,18 @@
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { module, test } from 'qunit';
-import { setupRenderingTest } from 'discourse/tests/helpers/component-test';
-import { exists } from 'discourse/tests/helpers/qunit-helpers';
+import { setupRenderingTest } from 'example-app/tests/helpers/component-test';
+import { exists } from 'example-app/tests/helpers/qunit-helpers';
 
-module('Integration | Component | ace-editor', function (hooks) {
+module('Integration | Component | foo', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('css editor', async function (assert) {
+  test('bar', async function (assert) {
     await render(hbs`
       <Foo @mode="9000">
         Bar
       </Foo>
     `);
-    assert.ok(exists('.ace_editor'), 'it renders the ace editor');
+    assert.ok(exists('.foo'), 'it renders foo');
   });
 });
