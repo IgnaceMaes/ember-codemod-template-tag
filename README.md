@@ -19,6 +19,10 @@ Codemod to convert Glimmer components to the `<template>` tag authoring format i
 
 Given a file `foo-test.js`:
 
+```sh
+npx ember-codemod-template-tag --component-root example-app/components
+```
+
 ```js
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
