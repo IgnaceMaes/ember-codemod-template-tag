@@ -1,16 +1,19 @@
 {
   "name": "ember-codemod-template-tag",
   "version": "0.0.0",
-  "private": true,
-  "description": "Small description for ember-codemod-template-tag goes here",
+  "private": false,
+  "description": "Codemod to convert Glimmer components to the <template> tag authoring format in .gjs and .gts",
   "keywords": [
     "codemod",
     "ember-codemod",
     "emberjs"
   ],
-  "repository": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/IgnaceMaes/ember-codemod-template-tag.git"
+  },
   "license": "MIT",
-  "author": "",
+  "author": "Ignace Maes (https://ignacemaes.com/)",
   "type": "module",
   "main": "dist/src/index.js",
   "bin": "dist/bin/ember-codemod-template-tag.js",
