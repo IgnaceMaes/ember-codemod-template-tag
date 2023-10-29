@@ -4,7 +4,7 @@ import { convertTests } from '../../../src/steps/index.js';
 import {
   codemodOptions,
   options,
-} from '../../helpers/shared-test-setups/sample-project.js';
+} from '../../helpers/shared-test-setups/convert-tests.js';
 
 test('steps | convert-tests > base case', function () {
   const inputProject = {
