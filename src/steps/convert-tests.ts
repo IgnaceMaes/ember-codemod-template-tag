@@ -11,11 +11,11 @@ import { AST as AST_HBS } from '@codemod-utils/ast-template';
 import { kebabCase } from 'change-case';
 
 function replaceExtension(filePath: string): string {
-  return filePath.replace('.js', '.gjs');
+  return filePath.replace('.js', '.gjs').replace('.ts', '.gts');
 }
 
-function rewriteHbsTemplateString(file: string, appName: string): string {
-  const traverse = AST_JS.traverse();
+function rewriteHbsTemplateString(file: string, config: { appName: string, isTypeScript: boolean }): string {
+  const traverse = AST_JS.traverse(config.isTypeScript);
   let allComponentNames = new Set<string>();
   let allHelperNames = new Set<string>();
 
@@ -46,7 +46,7 @@ function rewriteHbsTemplateString(file: string, appName: string): string {
       return false;
     },
   });
-  addComponentImports(ast, allComponentNames, appName);
+  addComponentImports(ast, allComponentNames, config.appName);
   addHelperImports(ast, allHelperNames);
 
   return AST_JS.print(ast);
@@ -162,7 +162,7 @@ function getComponentNameFromNestedPath(componentPath: string): string {
 export function convertTests(options: Options): void {
   const { appName, projectRoot } = options;
 
-  const filePaths = findFiles('**/*-test.js', {
+  const filePaths = findFiles(['**/*-test.js', '**/*-test.ts'], {
     projectRoot,
   });
 
@@ -175,7 +175,10 @@ export function convertTests(options: Options): void {
       renameSync(join(projectRoot, filePath), join(projectRoot, newFilePath));
 
       // Replace hbs`` template string with a <template> tag
-      file = rewriteHbsTemplateString(file, appName);
+      file = rewriteHbsTemplateString(file, {
+        appName,
+        isTypeScript: filePath.endsWith('.ts'),
+      });
 
       return [newFilePath, file];
     }),
