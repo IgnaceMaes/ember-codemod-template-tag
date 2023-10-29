@@ -21,7 +21,7 @@ Codemod to convert Glimmer components to the `<template>` tag authoring format i
 Given a file `foo-test.js`:
 
 ```sh
-npx ember-codemod-template-tag --component-root example-app/components
+npx ember-codemod-template-tag --app-name example-app
 ```
 
 ```js
@@ -63,10 +63,10 @@ module('Integration | Component | foo', function (hooks) {
 
 ### Arguments
 
-You must pass the component root directory. In most cases this will be `your-app-name/components`:
+You must pass the app name as an argument to the codemod. This value is used to provide import statements:
 
 ```sh
-npx ember-codemod-template-tag --component-root <your-app-name/components>
+npx ember-codemod-template-tag --example-app <your-app-name>
 ```
 
 <details>

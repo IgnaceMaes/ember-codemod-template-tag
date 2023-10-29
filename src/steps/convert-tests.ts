@@ -14,7 +14,7 @@ function replaceExtension(filePath: string): string {
   return filePath.replace('.js', '.gjs');
 }
 
-function rewriteHbsTemplateString(file: string, componentRoot: string): string {
+function rewriteHbsTemplateString(file: string, appName: string): string {
   const traverse = AST_JS.traverse();
   let allComponentNames = new Set<string>();
   let allHelperNames = new Set<string>();
@@ -46,7 +46,7 @@ function rewriteHbsTemplateString(file: string, componentRoot: string): string {
       return false;
     },
   });
-  addComponentImports(ast, allComponentNames, componentRoot);
+  addComponentImports(ast, allComponentNames, appName);
   addHelperImports(ast, allHelperNames);
 
   return AST_JS.print(ast);
@@ -106,7 +106,7 @@ function convertToComponentImports(template: string): string {
 function addComponentImports(
   ast: any,
   componentNames: Set<string>,
-  componentRoot: string,
+  appName: string,
 ) {
   [...componentNames].forEach((componentName) => {
     const actualComponentName = getComponentNameFromNestedPath(componentName);
@@ -116,7 +116,7 @@ function addComponentImports(
     const newImport = AST_JS.builders.importDeclaration(
       [importSpecifier],
       AST_JS.builders.stringLiteral(
-        convertComponentNameToPath(componentRoot, componentName),
+        convertComponentNameToPath(appName, componentName),
       ),
     );
     ast.program.body.unshift(newImport);
@@ -142,11 +142,11 @@ function addHelperImports(ast: any, helperNames: Set<string>) {
 }
 
 function convertComponentNameToPath(
-  componentRoot: string,
+  appName: string,
   componentName: string,
 ): string {
   return (
-    componentRoot +
+    appName + '/components/' +
     [
       ...componentName
         .split('::')
@@ -160,7 +160,7 @@ function getComponentNameFromNestedPath(componentPath: string): string {
 }
 
 export function convertTests(options: Options): void {
-  const { componentRoot, projectRoot } = options;
+  const { appName, projectRoot } = options;
 
   const filePaths = findFiles('**/*-test.js', {
     projectRoot,
@@ -175,7 +175,7 @@ export function convertTests(options: Options): void {
       renameSync(join(projectRoot, filePath), join(projectRoot, newFilePath));
 
       // Replace hbs`` template string with a <template> tag
-      file = rewriteHbsTemplateString(file, componentRoot);
+      file = rewriteHbsTemplateString(file, appName);
 
       return [newFilePath, file];
     }),

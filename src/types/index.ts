@@ -1,10 +1,10 @@
 type CodemodOptions = {
-  componentRoot: string;
+  appName: string;
   projectRoot: string;
 };
 
 type Options = {
-  componentRoot: string;
+  appName: string;
   projectRoot: string;
 };
 
