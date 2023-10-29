@@ -70,7 +70,7 @@ module('Integration | Component | foo', function (hooks) {
 You must pass the app name as an argument to the codemod. This value is used to provide import statements:
 
 ```sh
-npx ember-codemod-template-tag --example-app <your-app-name>
+npx ember-codemod-template-tag --app-name <your-app-name>
 ```
 
 <details>
