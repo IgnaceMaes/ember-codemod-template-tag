@@ -9,8 +9,8 @@ overrides:
 
 dependencies:
   '@codemod-utils/ast-javascript':
-    specifier: ^1.1.1
-    version: 1.1.1
+    specifier: ^1.2.0
+    version: 1.2.0
   '@codemod-utils/ast-template':
     specifier: ^1.1.0
     version: 1.1.0
@@ -510,8 +510,8 @@ packages:
       prettier: 2.8.8
     dev: true
 
-  /@codemod-utils/ast-javascript@1.1.1:
-    resolution: {integrity: sha512-0E5XiDxvHMtLkB5mX4a6U9j4e7Y/SlY5M/eWv7nFNHEhYc5pfLBi5DR2QV1JRtRB+5XqgbzNI22XcuKgC696pw==}
+  /@codemod-utils/ast-javascript@1.2.0:
+    resolution: {integrity: sha512-1UVPWKgG3Lh7UB6pvhmUiGUKG5u+V7oXiDRroAjss2fbT9Jiwkjt8Bq9J4+MdWn/mxnBRoW/zEsMjNW/Upc3PA==}
     engines: {node: 18.* || >= 20}
     dependencies:
       '@babel/parser': 7.23.0
