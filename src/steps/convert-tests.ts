@@ -1,20 +1,21 @@
 import { readFileSync, renameSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { createFiles, findFiles } from '@codemod-utils/files';
-
-import type { Options } from '../types/index.js';
-
 import { AST as AST_JS } from '@codemod-utils/ast-javascript';
 import { AST as AST_HBS } from '@codemod-utils/ast-template';
-
+import { createFiles, findFiles } from '@codemod-utils/files';
 import { kebabCase } from 'change-case';
+
+import type { Options } from '../types/index.js';
 
 function replaceExtension(filePath: string): string {
   return filePath.replace('.js', '.gjs').replace('.ts', '.gts');
 }
 
-function rewriteHbsTemplateString(file: string, config: { appName: string, isTypeScript: boolean }): string {
+function rewriteHbsTemplateString(
+  file: string,
+  config: { appName: string; isTypeScript: boolean },
+): string {
   const traverse = AST_JS.traverse(config.isTypeScript);
   let allComponentNames = new Set<string>();
   let allHelperNames = new Set<string>();
@@ -78,6 +79,7 @@ function extractHelpersFromTemplate(template: string): string[] {
 
   traverse(template, {
     MustacheStatement(node) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const helperName = (node.path as any)?.original;
       helpers.push(helperName);
     },
@@ -104,6 +106,7 @@ function convertToComponentImports(template: string): string {
 }
 
 function addComponentImports(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ast: any,
   componentNames: Set<string>,
   appName: string,
@@ -123,6 +126,7 @@ function addComponentImports(
   });
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function addHelperImports(ast: any, helperNames: Set<string>) {
   const builtinHelpers = [...helperNames].filter((helper) =>
     BUILT_IN_HELPERS.includes(helper),
@@ -146,7 +150,8 @@ function convertComponentNameToPath(
   componentName: string,
 ): string {
   return (
-    appName + '/components/' +
+    appName +
+    '/components/' +
     [
       ...componentName
         .split('::')
