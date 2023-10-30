@@ -35,16 +35,16 @@ module('Integration | Component | foo', function (hooks) {
   setupRenderingTest(hooks);
 
   test('bar', async function (assert) {
-    await render(hbs`<Foo @x={{array 1 2 3}} />`);
+    await render(hbs`<Foo::Bar @x={{array 1 2 3}} />`);
   });
 });
 ```
 
-The codemod will rewrite this to:
+The codemod will rewrite this to `foo-test.gts`:
 
 ```js
 import { array } from '@ember/helper';
-import Foo from 'example-app/components/foo';
+import Bar from 'example-app/components/foo/bar';
 import { render } from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'example-app/tests/helpers/component-test';
@@ -53,7 +53,7 @@ module('Integration | Component | foo', function (hooks) {
   setupRenderingTest(hooks);
 
   test('bar', async function (assert) {
-    await render(<template><Foo @x={{array 1 2 3}}/></template>);
+    await render(<template><Bar @x={{array 1 2 3}}/></template>);
   });
 });
 
@@ -84,24 +84,6 @@ npx ember-codemod-template-tag --root <path/to/your/project>
 ```
 
 </details>
-
-
-### Limitations
-
-The codemod is designed to cover typical cases. It is not designed to cover one-off cases.
-
-To better meet your needs, consider cloning the repo and running the codemod locally.
-
-```sh
-cd <path/to/cloned/repo>
-
-# Compile TypeScript
-pnpm build
-
-# Run codemod
-./dist/bin/ember-codemod-template-tag.js --root <path/to/your/project>
-```
-
 
 ## Compatibility
 
