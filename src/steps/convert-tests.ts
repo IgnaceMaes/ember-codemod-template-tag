@@ -11,11 +11,7 @@ import {
   getComponentNameFromNestedPath,
 } from '../utils/components.js';
 import { BUILT_IN_HELPERS } from '../utils/constants.js';
-import { isTypeScriptFile } from '../utils/general.js';
-
-function replaceExtension(filePath: string): string {
-  return filePath.replace('.js', '.gjs').replace('.ts', '.gts');
-}
+import { isTypeScriptFile, replaceExtensionWithGlimmer } from '../utils/general.js';
 
 function rewriteHbsTemplateString(
   file: string,
@@ -160,7 +156,7 @@ export function convertTests(options: Options): void {
       let file = readFileSync(join(projectRoot, filePath), 'utf8');
 
       // Move file to new extension
-      const newFilePath = replaceExtension(filePath);
+      const newFilePath = replaceExtensionWithGlimmer(filePath);
       renameSync(join(projectRoot, filePath), join(projectRoot, newFilePath));
 
       // Replace hbs`` template string with a <template> tag
