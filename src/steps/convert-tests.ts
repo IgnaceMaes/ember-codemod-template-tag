@@ -4,9 +4,13 @@ import { join } from 'node:path';
 import { AST as AST_JS } from '@codemod-utils/ast-javascript';
 import { AST as AST_HBS } from '@codemod-utils/ast-template';
 import { createFiles, findFiles } from '@codemod-utils/files';
-import { kebabCase } from 'change-case';
 
 import type { Options } from '../types/index.js';
+import {
+  convertComponentNameToPath,
+  getComponentNameFromNestedPath,
+} from '../utils/components.js';
+import { isTypeScriptFile } from '../utils/general.js';
 
 function replaceExtension(filePath: string): string {
   return filePath.replace('.js', '.gjs').replace('.ts', '.gts');
@@ -145,25 +149,6 @@ function addHelperImports(ast: any, helperNames: Set<string>) {
   }
 }
 
-function convertComponentNameToPath(
-  appName: string,
-  componentName: string,
-): string {
-  return (
-    appName +
-    '/components/' +
-    [
-      ...componentName
-        .split('::')
-        .map((componentPart) => kebabCase(componentPart)),
-    ].join('/')
-  );
-}
-
-function getComponentNameFromNestedPath(componentPath: string): string {
-  return componentPath.split('::').pop() ?? '';
-}
-
 export function convertTests(options: Options): void {
   const { appName, projectRoot } = options;
 
@@ -182,7 +167,7 @@ export function convertTests(options: Options): void {
       // Replace hbs`` template string with a <template> tag
       file = rewriteHbsTemplateString(file, {
         appName,
-        isTypeScript: filePath.endsWith('.ts'),
+        isTypeScript: isTypeScriptFile(filePath),
       });
 
       return [newFilePath, file];
