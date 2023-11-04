@@ -1,0 +1,12 @@
+diff --git a/dist/ast/javascript.js b/dist/ast/javascript.js
+index fb12fdabf61cdcb199a904972abc3401f3955fc8..499a6f42016953aba891c4f10ada3cc861306ae1 100644
+--- a/dist/ast/javascript.js
++++ b/dist/ast/javascript.js
+@@ -63,6 +63,7 @@ const tsOptions = {
+         ['pipelineOperator', { proposal: 'minimal' }],
+         'throwExpressions',
+         'typescript',
++        'jsx',
+     ],
+ };
+ function getParseOptions(isTypeScript) {
