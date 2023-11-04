@@ -11,7 +11,10 @@ import {
   getComponentNameFromNestedPath,
 } from '../utils/components.js';
 import { BUILT_IN_HELPERS } from '../utils/constants.js';
-import { isTypeScriptFile, replaceExtensionWithGlimmer } from '../utils/general.js';
+import {
+  isTypeScriptFile,
+  replaceExtensionWithGlimmer,
+} from '../utils/general.js';
 
 function rewriteHbsTemplateString(
   file: string,
@@ -59,7 +62,6 @@ function extractComponentsFromTemplate(template: string): string[] {
   const traverse = AST_HBS.traverse();
 
   traverse(template, {
-    /* Use AST.builders to transform the tree */
     ElementNode(node) {
       const componentName = node.tag;
       // Assume it's a component invocation if it starts with a capital letter
@@ -91,7 +93,6 @@ function convertToComponentImports(template: string): string {
   const traverse = AST_HBS.traverse();
 
   const ast = traverse(template, {
-    /* Use AST.builders to transform the tree */
     ElementNode(node) {
       const componentName = node.tag;
       // Assume it's a component invocation if it starts with a capital letter
