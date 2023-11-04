@@ -10,6 +10,7 @@ import {
   convertComponentNameToPath,
   getComponentNameFromNestedPath,
 } from '../utils/components.js';
+import { BUILT_IN_HELPERS } from '../utils/constants.js';
 import { isTypeScriptFile } from '../utils/general.js';
 
 function replaceExtension(filePath: string): string {
@@ -74,8 +75,6 @@ function extractComponentsFromTemplate(template: string): string[] {
 
   return components;
 }
-
-const BUILT_IN_HELPERS = ['concat', 'array', 'fn', 'get', 'hash'];
 
 function extractHelpersFromTemplate(template: string): string[] {
   const helpers: string[] = [];
