@@ -17,6 +17,11 @@ type ContentTag = {
   type: string;
 };
 
+type ContentTagPlaceholder = {
+  contents: string;
+  id: string;
+};
+
 export function parse(file: string) {
   const preprocessor = new Preprocessor();
 
@@ -41,23 +46,28 @@ export function replaceContents(
   ].join('');
 }
 
-function _print(ast: types.ASTNode, contentTags: ContentTag[]): string {
+function _print(
+  ast: types.ASTNode,
+  contentTags: ContentTagPlaceholder[],
+): string {
   let output = AST_JS.print(ast);
 
   const placeholderContentTags = parse(output);
   if (placeholderContentTags.length !== contentTags.length) {
     throw new Error('The number of content tags does not match');
   }
-  const contentTagMap = contentTags.map((k, i) => {
-    return {
-      original: k,
-      placeholder: placeholderContentTags[i],
-    };
-  });
-  contentTagMap.reverse().forEach((match) => {
+  placeholderContentTags.reverse().forEach((placeholderContentTag) => {
+    const match = contentTags.find(
+      (contentTag) => contentTag.id === placeholderContentTag.contents,
+    );
+    if (match === undefined) {
+      throw new Error(
+        `Expected content tag with id "${placeholderContentTag.contents}" to exist, but no match was found.`,
+      );
+    }
     output = replaceContents(output, {
-      contents: match.original.contents,
-      range: match.placeholder!.range,
+      contents: match.contents,
+      range: placeholderContentTag.range,
     });
   });
 
@@ -66,7 +76,7 @@ function _print(ast: types.ASTNode, contentTags: ContentTag[]): string {
 
 interface TraverseTT {
   ast: types.ASTNode;
-  contentTags: ContentTag[];
+  contentTags: ContentTagPlaceholder[];
 }
 
 function _traverse(
@@ -78,16 +88,22 @@ function _traverse(
     visitMethods?: types.Visitor<unknown> | undefined,
   ): TraverseTT {
     const contentTags = parse(file);
+    const contentTagPlaceholders: ContentTagPlaceholder[] = [];
     contentTags.reverse().forEach((contentTag, index) => {
+      const placeholderId = `${index}`;
       file = replaceContents(file, {
-        contents: `${index}`,
+        contents: placeholderId,
         range: contentTag.range,
+      });
+      contentTagPlaceholders.push({
+        contents: contentTag.contents,
+        id: placeholderId,
       });
     });
 
     return {
       ast: originalTraverse(file, visitMethods),
-      contentTags: contentTags,
+      contentTags: contentTagPlaceholders,
     };
   };
 }
