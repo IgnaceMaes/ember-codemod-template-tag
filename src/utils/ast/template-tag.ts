@@ -75,7 +75,7 @@ function _traverse(
   const originalTraverse = AST_JS.traverse(isTypeScript);
   return function (
     file: string,
-    visitMethods?: types.Visitor<{}> | undefined,
+    visitMethods?: types.Visitor<unknown> | undefined,
   ): TraverseTT {
     const contentTags = parse(file);
     contentTags.reverse().forEach((contentTag, index) => {
