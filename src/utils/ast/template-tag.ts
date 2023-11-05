@@ -94,7 +94,7 @@ function _traverse(
 
 /**
  * Provides methods from `recast` to help you parse and transform
- * `*.{js,ts}` files.
+ * `*.{gjs,gts}` files.
  *
  * @example
  *
@@ -102,11 +102,11 @@ function _traverse(
  * function transformCode(file: string, isTypeScript: boolean): string {
  *   const traverse = AST.traverse(isTypeScript);
  *
- *   const ast = traverse(file, {
+ *   const { ast, contentTags } = traverse(file, {
  *     // Use AST.builders to transform the tree
  *   });
  *
- *   return AST.print(ast);
+ *   return AST.print(ast, contentTags);
  * }
  * ```
  */
