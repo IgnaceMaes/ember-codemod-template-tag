@@ -7,10 +7,15 @@ settings:
 overrides:
   eslint-plugin-import@2.29.0>tsconfig-paths: ^4.2.0
 
+patchedDependencies:
+  '@codemod-utils/ast-javascript@1.2.0':
+    hash: bp23mxgrcfstpz7ec5qeelifce
+    path: patches/@codemod-utils__ast-javascript@1.2.0.patch
+
 dependencies:
   '@codemod-utils/ast-javascript':
     specifier: ^1.2.0
-    version: 1.2.0
+    version: 1.2.0(patch_hash=bp23mxgrcfstpz7ec5qeelifce)
   '@codemod-utils/ast-template':
     specifier: ^1.1.0
     version: 1.1.0
@@ -20,6 +25,12 @@ dependencies:
   change-case:
     specifier: ^5.1.2
     version: 5.1.2
+  content-tag:
+    specifier: ^1.1.2
+    version: 1.1.2
+  recast:
+    specifier: ^0.23.4
+    version: 0.23.4
   yargs:
     specifier: ^17.7.2
     version: 17.7.2
@@ -510,13 +521,14 @@ packages:
       prettier: 2.8.8
     dev: true
 
-  /@codemod-utils/ast-javascript@1.2.0:
+  /@codemod-utils/ast-javascript@1.2.0(patch_hash=bp23mxgrcfstpz7ec5qeelifce):
     resolution: {integrity: sha512-1UVPWKgG3Lh7UB6pvhmUiGUKG5u+V7oXiDRroAjss2fbT9Jiwkjt8Bq9J4+MdWn/mxnBRoW/zEsMjNW/Upc3PA==}
     engines: {node: 18.* || >= 20}
     dependencies:
       '@babel/parser': 7.23.0
       recast: 0.23.4
     dev: false
+    patched: true
 
   /@codemod-utils/ast-template@1.1.0:
     resolution: {integrity: sha512-6A/Gxmb9dlgLFiGAy9vlxqWB3owgMnXVt9O2aGue3EwCy6NUJlGITN7JGIX9cM4yU9Z8j7XSh6ZzWaKPiOWVCA==}
@@ -1537,6 +1549,10 @@ packages:
       tree-kill: 1.2.2
       yargs: 17.7.2
     dev: true
+
+  /content-tag@1.1.2:
+    resolution: {integrity: sha512-AZkfc6TUmW+/RbZJioPzOQPAHHXqyqK4B0GNckJDjBAPK3SyGrMfn21bfFky/qwi5uoLph5sjAHUkO3CL6/IgQ==}
+    dev: false
 
   /convert-source-map@2.0.0:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
