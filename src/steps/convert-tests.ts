@@ -1,4 +1,4 @@
-import { readFileSync, renameSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { AST as AST_JS } from '@codemod-utils/ast-javascript';
@@ -11,10 +11,7 @@ import {
   getComponentNameFromNestedPath,
 } from '../utils/components.js';
 import { BUILT_IN_HELPERS } from '../utils/constants.js';
-import {
-  isTypeScriptFile,
-  replaceExtensionWithGlimmer,
-} from '../utils/general.js';
+import { isTypeScriptFile } from '../utils/general.js';
 
 function rewriteHbsTemplateString(
   file: string,
@@ -149,17 +146,13 @@ export function convertTests(options: Options): void {
     filePaths.map((filePath) => {
       let file = readFileSync(join(projectRoot, filePath), 'utf8');
 
-      // Move file to new extension
-      const newFilePath = replaceExtensionWithGlimmer(filePath);
-      renameSync(join(projectRoot, filePath), join(projectRoot, newFilePath));
-
       // Replace hbs`` template string with a <template> tag
       file = rewriteHbsTemplateString(file, {
         appName,
         isTypeScript: isTypeScriptFile(filePath),
       });
 
-      return [newFilePath, file];
+      return [filePath, file];
     }),
   );
 
