@@ -25,6 +25,7 @@ const argv = yargs(hideBin(process.argv))
 
 const codemodOptions: CodemodOptions = {
   appName: argv['app-name'] ?? 'example-app',
+  filename: 'nope',
   projectRoot: argv['root'] ?? process.cwd(),
 };
 
