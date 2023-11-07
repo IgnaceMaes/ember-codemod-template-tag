@@ -1,10 +1,11 @@
 import type { CodemodOptions, Options } from '../types/index.js';
 
 export function createOptions(codemodOptions: CodemodOptions): Options {
-  const { appName: appName, projectRoot } = codemodOptions;
+  const { appName, filename, projectRoot } = codemodOptions;
 
   return {
-    appName: appName,
+    appName,
+    filename,
     projectRoot,
   };
 }
