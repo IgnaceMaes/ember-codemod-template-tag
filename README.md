@@ -4,8 +4,11 @@
 
 Codemod to convert Glimmer components to the `<template>` tag authoring format in `.gjs` and `.gts`.
 
-> **NOTE**
-> This codemod is far from feature complete. Currently it only handles converting `*-test.js` files which use the `hbs` helper. PRs welcome!
+> [!WARNING]
+> This codemod is not actively being worked on as there is now [an official codemod maintained within the Embroider project](https://github.com/embroider-build/embroider/pull/1842).
+
+> [!NOTE]
+> This codemod is far from feature complete. Currently it only handles converting `*-test.js` files which use the `hbs` helper.
 
 ## Functionality
 
