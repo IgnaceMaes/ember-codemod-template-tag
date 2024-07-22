@@ -38,6 +38,7 @@
     "@codemod-utils/ast-javascript": "^1.2.0",
     "@codemod-utils/ast-template": "^1.1.0",
     "@codemod-utils/files": "^1.1.0",
+    "@glimmer/syntax": "^0.85.12",
     "change-case": "^5.1.2",
     "content-tag": "^1.1.2",
     "recast": "^0.23.4",
